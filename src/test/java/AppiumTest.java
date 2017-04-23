@@ -24,6 +24,7 @@ public class AppiumTest {
 
     private AppiumDriver driver;
 
+
     @Before
     public void setUp() throws Exception {
 
@@ -122,20 +123,9 @@ public class AppiumTest {
         accEle.clear();
         accEle.sendKeys(RIGHT_EMAIL_ADDRESS);
 
-//        driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_password")).clear();
-//        //pwdEle.clear();
-//        driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_password")).sendKeys(RIGHT_PWD);
-//        (new WebDriverWait(driver, 20))
-//                .until(ExpectedConditions.presenceOfElementLocated(By.id("com.groupon:id/fragment_log_in_sign_up_password"))).clear();
-//        (new WebDriverWait(driver, 20))
-//                .until(ExpectedConditions.presenceOfElementLocated(By.id("com.groupon:id/fragment_log_in_sign_up_password"))).sendKeys(RIGHT_PWD);
         WebElement ele = driver.findElementByXPath("//android.widget.EditText[@index='1']");
         ele.clear();
         ele.sendKeys(RIGHT_PWD);
-
-
-//        WebElement dealPref = ((AndroidDriver) driver).findElementByAndroidUIAutomator("new UiSelector().text(\"Deal Preferences\")");
-
 
         driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_groupon_button")).click();
     }
@@ -151,12 +141,8 @@ public class AppiumTest {
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.support.v4.widget.DrawerLayout[1]/android.widget.FrameLayout[1]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.widget.ImageButton[1]")))
                 .click();
 
-
         //Choose Deal Preferences
-//        WebElement dealPref = ((AndroidDriver) driver).findElementByAndroidUIAutomator("new UiSelector().text(\"Deal Preferences\")");
-//        dealPref.click();
         ((AndroidDriver) driver).findElementByAndroidUIAutomator("new UiSelector().text(\"Deal Preferences\")").click();
-
 
         //Favorite Girls Night Out
         List<WebElement> webElements = driver.findElements(By.id("com.groupon:id/deal_tag_name"));
