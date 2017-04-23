@@ -21,6 +21,7 @@ public class AppiumTest {
     final String EXPECTED_DISMISS_TEXT = "Dismiss";
     final String RIGHT_EMAIL_ADDRESS = "cmpe287team2@gmail.com";
     final String RIGHT_PWD = "tester123";
+    final String FAVORITE_GIRLS_NIGHT_OUT = "Girls Night Out";
 
     private AppiumDriver driver;
 
@@ -53,13 +54,59 @@ public class AppiumTest {
     @Test
     public void logInAndDealPreference() {
 
-        wrongLogIn();
+        //log in with wrong info
+        (new WebDriverWait(driver, 20))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("com.groupon:id/done")))
+                .click();
+        (new WebDriverWait(driver, 20))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("com.groupon:id/fragment_log_in_sign_up_email")))
+                .sendKeys(WRONG_EMAIL_ADDRESS);
+        (new WebDriverWait(driver, 20))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("com.groupon:id/fragment_log_in_sign_up_password")))
+                .sendKeys(WRONG_PWD);
+        driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_groupon_button")).click();
 
-        rightLogInAfterDismiss();
+        WebElement dismissButton = (new WebDriverWait(driver, 20))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("com.groupon:id/dialog_positive_button")));
+        String buttonText = dismissButton.getText();
+        Assert.assertEquals(buttonText, EXPECTED_DISMISS_TEXT);
+        dismissButton.click();
 
-        editDealPreference();
 
-        returnToHomepageFromDealPreference();
+
+        //log in with right info
+        WebElement accEle = driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_email"));
+        accEle.clear();
+        accEle.sendKeys(RIGHT_EMAIL_ADDRESS);
+        driver.findElementByXPath("//android.widget.EditText[@index='1']").clear();
+        driver.findElementByXPath("//android.widget.EditText[@index='1']").sendKeys(RIGHT_PWD);
+        driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_groupon_button")).click();
+
+
+
+        //edit Deal Preference
+        (new WebDriverWait(driver, 20))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.support.v4.widget.DrawerLayout[1]/android.widget.FrameLayout[1]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.widget.ImageButton[1]")))
+                .click();
+        ((AndroidDriver) driver).findElementByAndroidUIAutomator("new UiSelector().text(\"Deal Preferences\")").click();
+        List<WebElement> webElements = driver.findElements(By.id("com.groupon:id/deal_tag_name"));
+
+        for(WebElement webElement : webElements) {
+            String elementText = webElement.getText();
+            if(elementText.equals(FAVORITE_GIRLS_NIGHT_OUT)) {
+                webElement.click();
+                break;
+            }
+        }
+
+
+
+        //return to homepage from Deal Preference page
+        (new WebDriverWait(driver, 20))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.view.ViewGroup[1]/android.widget.ImageButton[1]")))
+                .click();
+
+
 
         threadWait(3000);
     }
@@ -83,88 +130,5 @@ public class AppiumTest {
             e.printStackTrace();
         }
     }
-
-
-    /***
-     * Try to log in with wrong information.
-     * Precondition: "Login or Signup" page shown after zip setting.
-     */
-    private void wrongLogIn() {
-
-        (new WebDriverWait(driver, 20))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("com.groupon:id/done")))
-                .click();
-        (new WebDriverWait(driver, 20))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("com.groupon:id/fragment_log_in_sign_up_email")))
-                .sendKeys(WRONG_EMAIL_ADDRESS);
-        (new WebDriverWait(driver, 20))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("com.groupon:id/fragment_log_in_sign_up_password")))
-                .sendKeys(WRONG_PWD);
-        driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_groupon_button")).click();
-
-
-        WebElement dismissButton = (new WebDriverWait(driver, 20))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("com.groupon:id/dialog_positive_button")));
-        String buttonText = dismissButton.getText();
-        Assert.assertEquals(buttonText, EXPECTED_DISMISS_TEXT);
-
-        dismissButton.click();
-    }
-
-
-    /***
-     * Try to log in with the right information.
-     * Precondition: There's wrong info leftover in text field from the wrong login.
-     */
-    private void rightLogInAfterDismiss() {
-
-        WebElement accEle = driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_email"));
-        accEle.clear();
-        accEle.sendKeys(RIGHT_EMAIL_ADDRESS);
-
-        driver.findElementByXPath("//android.widget.EditText[@index='1']").clear();
-        driver.findElementByXPath("//android.widget.EditText[@index='1']").sendKeys(RIGHT_PWD);
-
-        driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_groupon_button")).click();
-    }
-
-
-    /***
-     * Edit Deal Preference from homepage.
-     */
-    private void editDealPreference() {
-
-        //Click Side Menu
-        (new WebDriverWait(driver, 20))
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.support.v4.widget.DrawerLayout[1]/android.widget.FrameLayout[1]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.widget.ImageButton[1]")))
-                .click();
-
-        //Choose Deal Preferences
-        ((AndroidDriver) driver).findElementByAndroidUIAutomator("new UiSelector().text(\"Deal Preferences\")").click();
-
-        //Favorite Girls Night Out
-        List<WebElement> webElements = driver.findElements(By.id("com.groupon:id/deal_tag_name"));
-        for(WebElement webElement : webElements) {
-
-            String elementText = webElement.getText();
-            if(elementText.equals("Girls Night Out")) {
-                webElement.click();
-
-                break;
-            }
-        }
-    }
-
-
-    /***
-     * Return to homepage from the Deal Preference page.
-     */
-    private void returnToHomepageFromDealPreference() {
-
-        (new WebDriverWait(driver, 20))
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.view.ViewGroup[1]/android.widget.ImageButton[1]")))
-                .click();
-    }
-
 
 }
