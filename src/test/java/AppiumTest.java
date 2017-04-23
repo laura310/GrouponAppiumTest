@@ -103,7 +103,6 @@ public class AppiumTest {
         driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_groupon_button")).click();
 
 
-
         WebElement dismissButton = (new WebDriverWait(driver, 20))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("com.groupon:id/dialog_positive_button")));
         String buttonText = dismissButton.getText();
@@ -123,9 +122,8 @@ public class AppiumTest {
         accEle.clear();
         accEle.sendKeys(RIGHT_EMAIL_ADDRESS);
 
-        WebElement ele = driver.findElementByXPath("//android.widget.EditText[@index='1']");
-        ele.clear();
-        ele.sendKeys(RIGHT_PWD);
+        driver.findElementByXPath("//android.widget.EditText[@index='1']").clear();
+        driver.findElementByXPath("//android.widget.EditText[@index='1']").sendKeys(RIGHT_PWD);
 
         driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_groupon_button")).click();
     }
