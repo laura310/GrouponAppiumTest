@@ -78,8 +78,9 @@ public class AppiumTest {
         WebElement accEle = driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_email"));
         accEle.clear();
         accEle.sendKeys(RIGHT_EMAIL_ADDRESS);
-        driver.findElementByXPath("//android.widget.EditText[@index='1']").clear();
-        driver.findElementByXPath("//android.widget.EditText[@index='1']").sendKeys(RIGHT_PWD);
+        WebElement pwdEle = driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_password"));
+        pwdEle.clear();
+        pwdEle.sendKeys(RIGHT_PWD);
         driver.findElement(By.id("com.groupon:id/fragment_log_in_sign_up_groupon_button")).click();
 
 
